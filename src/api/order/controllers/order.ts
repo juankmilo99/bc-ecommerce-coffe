@@ -15,7 +15,7 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
           console.log('Fetching product with id:', product.documentId);
           const item = await strapi
             .service('api::product.product')
-            .findOne({ id: product.documentId }); // Ajuste aquí
+            .findOne(product.documentId); // Ajuste aquí
 
           if (!item) {
             console.error(`Product with id ${product.documentId} not found`);
