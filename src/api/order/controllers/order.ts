@@ -15,7 +15,7 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
           console.log('Fetching product with id:', product.documentId);
           const item = await strapi
             .service('api::product.product')
-            .findOne(product.documentId);
+            .findOne({ id: product.documentId });
 
           if (!item) {
             console.error(`Product with id ${product.documentId} not found`);
@@ -39,12 +39,18 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
 
       console.log('Line items:', lineItems);
 
+      const successUrl = `${process.env.CLIENT_URL}/success`.trim();
+      const cancelUrl = `${process.env.CLIENT_URL}/cancel`.trim();
+
+      console.log('Success URL:', successUrl);
+      console.log('Cancel URL:', cancelUrl);
+
       const session = await stripe.checkout.sessions.create({
         shipping_address_collection: { allowed_countries: ['US'] },
         payment_method_types: ['card'],
         mode: 'payment',
-        success_url: `${process.env.CLIENT_URL}/success`,
-        cancel_url: `${process.env.CLIENT_URL}/cancel`,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
         line_items: lineItems,
       });
 
